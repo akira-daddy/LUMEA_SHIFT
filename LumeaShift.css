@@ -619,8 +619,9 @@ body{
   background:var(--accent);color:var(--text);
 }
 .pricing-amount{
-  font-family:'Cormorant Garamond',serif;
+  font-family:'Noto Sans JP',sans-serif;
   font-size:48px;font-weight:300;
+  font-feature-settings:'tnum' 1;
   line-height:1;margin-bottom:4px;
 }
 .pricing-card:not(.featured) .pricing-amount{color:var(--text)}
