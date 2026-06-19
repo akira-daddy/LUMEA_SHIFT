@@ -95,6 +95,33 @@ if(scroll){
     });
   }
 
+  // ── ユーザーによる「故意のスクロール」検知 ──
+  // playScene() 内で scrollIntoView を呼ぶ際は programmaticScroll を立てて、
+  // それによって発火する scroll イベントを「ユーザー操作」と誤認しないようにする。
+  let programmaticScroll = false;
+  let programmaticScrollTimer = null;
+
+  function markProgrammaticScroll(){
+    programmaticScroll = true;
+    clearTimeout(programmaticScrollTimer);
+    // smooth scrollの完了を待つための猶予期間
+    programmaticScrollTimer = setTimeout(()=>{
+      programmaticScroll = false;
+    }, 900);
+  }
+
+  function onUserScroll(){
+    if(programmaticScroll) return; // 自動スクロール中は無視
+    if(isRunning){
+      stopSequence();
+    }
+  }
+
+  // scroll / wheel / touchmove のいずれかでユーザーの能動的な画面移動を検知
+  window.addEventListener('scroll', onUserScroll, {passive:true});
+  window.addEventListener('wheel', onUserScroll, {passive:true});
+  window.addEventListener('touchmove', onUserScroll, {passive:true});
+
   function playScene(idx){
     if(idx >= scenes.length){
       isRunning = false;
@@ -113,7 +140,8 @@ if(scroll){
       }
     });
 
-    // そのSceneの画面までスクロール
+    // そのSceneの画面までスクロール（自動スクロールであることをマーク）
+    markProgrammaticScroll();
     scene.scrollIntoView({behavior:'smooth', block:'start'});
 
     video.currentTime = 0;

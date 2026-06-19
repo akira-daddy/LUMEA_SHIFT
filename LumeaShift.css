@@ -5,11 +5,18 @@
   --cream:#EAE3D9;
   --light:#F5F5F5;
   --accent:#D4BFA3;
-  --text:#333333;
+  --text:#3a2e22;
   --text-muted:#7a7267;
   --text-light:#a89e93;
   --white:#ffffff;
   --border:#e0d9d0;
+
+  /* ダークブラウン系（黒の代替） */
+  --espresso:#2b2017;       /* 旧 #1a1a1a / #111 相当の最濃色 */
+  --espresso-2:#34281c;     /* 旧 #1a1510 相当 */
+  --espresso-3:#3d2f21;     /* 旧 #1a1611 / #262018 相当（やや明） */
+  --espresso-soft:#473825;  /* ボタンhoverなど中間トーン */
+  --espresso-line:rgba(43,32,23,0.72);  /* 旧 rgba(0,0,0,..) シャドウ/グラデ代替 */
 }
 html{scroll-behavior:smooth}
 body{
@@ -64,7 +71,7 @@ body{
   position:relative;
   display:flex;
   flex-direction:column;
-  background:#1a1510;
+  background:var(--espresso-2);
 }
 
 /* コンテンツ（テキスト＋CTA） */
@@ -82,7 +89,7 @@ body{
   color:rgba(255,255,255,0.75);
   text-transform:uppercase;
   margin-bottom:10px;
-  text-shadow:0 1px 6px rgba(0,0,0,0.3);
+  text-shadow:0 1px 6px rgba(43,32,23,0.4);
 }
 .hero-headline{
   font-family:'Cormorant Garamond',serif;
@@ -91,7 +98,7 @@ body{
   line-height:1.4;
   color:#fff;
   margin-bottom:6px;
-  text-shadow:0 2px 12px rgba(0,0,0,0.35);
+  text-shadow:0 2px 12px rgba(43,32,23,0.45);
 }
 .hero-headline em{
   font-style:italic;
@@ -102,7 +109,7 @@ body{
   color:rgba(255,255,255,0.82);
   line-height:1.7;
   margin-bottom:0;
-  text-shadow:0 1px 6px rgba(0,0,0,0.3);
+  text-shadow:0 1px 6px rgba(43,32,23,0.4);
 }
 
 /* ── プロモ動画エリア ── */
@@ -228,7 +235,7 @@ body{
 
 /* ── VIDEO SECTION ── */
 .section-video{
-  background:#1a1611;
+  background:var(--espresso-2);
   padding:60px 0 0;
   overflow:hidden;
 }
@@ -252,7 +259,7 @@ body{
 }
 .video-placeholder{
   width:100%;
-  background:#262018;
+  background:var(--espresso-3);
   aspect-ratio:9/16;
   position:relative;
   display:flex;flex-direction:column;
@@ -284,7 +291,7 @@ body{
 }
 .scene-overlay{
   position:absolute;inset:0;
-  background:linear-gradient(to top, rgba(20,16,10,0.95) 0%, rgba(20,16,10,0.4) 60%, rgba(20,16,10,0.1) 100%);
+  background:linear-gradient(to top, rgba(43,32,23,0.92) 0%, rgba(43,32,23,0.4) 60%, rgba(43,32,23,0.1) 100%);
 }
 .scene-num{
   position:absolute;top:16px;left:24px;
@@ -329,7 +336,7 @@ body{
 }
 .scene-product-shot img{
   width:100%;
-  filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+  filter:drop-shadow(0 4px 12px rgba(43,32,23,0.45));
 }
 .video-cta-section{
   padding:32px 28px 40px;
@@ -402,7 +409,7 @@ body{
 }
 .solution-product img{
   width:100%;
-  filter:drop-shadow(0 20px 50px rgba(0,0,0,0.15));
+  filter:drop-shadow(0 20px 50px rgba(43,32,23,0.18));
 }
 .feature-grid{
   display:grid;
@@ -418,8 +425,14 @@ body{
   text-align:center;
 }
 .feature-icon{
-  font-size:24px;margin-bottom:10px;
-  display:block;
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.feature-icon svg{
+  width:26px;height:26px;
+  color:#8b7355;
 }
 .feature-title{
   font-size:13px;font-weight:500;
@@ -568,9 +581,9 @@ body{
   display:flex;align-items:center;justify-content:center;
   transition:transform .3s;
   color:var(--accent);
-  font-size:14px;
   line-height:1;
 }
+.faq-icon svg{width:11px;height:11px}
 .faq-item.open .faq-icon{transform:rotate(45deg)}
 .faq-a{
   max-height:0;overflow:hidden;
@@ -639,13 +652,14 @@ body{
 .pricing-feature{
   display:flex;align-items:center;gap:8px;
   font-size:12px;padding:6px 0;
-  border-bottom:0.5px solid rgba(0,0,0,0.05);
+  border-bottom:0.5px solid rgba(43,32,23,0.07);
 }
 .pricing-card.featured .pricing-feature{
   color:rgba(255,255,255,0.8);
   border-bottom-color:rgba(255,255,255,0.08);
 }
-.pricing-check{color:var(--accent);font-size:14px}
+.pricing-check{color:var(--accent);font-size:14px;display:inline-flex;align-items:center}
+.pricing-check .check-svg{width:14px;height:14px}
 .pricing-card.featured .pricing-check{color:#D4BFA3}
 .btn-primary{
   display:block;width:100%;
@@ -662,7 +676,7 @@ body{
 .btn-primary-dark{
   background:var(--text);color:var(--white);
 }
-.btn-primary-dark:hover{background:#555}
+.btn-primary-dark:hover{background:var(--espresso-soft)}
 .btn-primary-light{
   background:var(--white);color:var(--text);
 }
@@ -733,12 +747,19 @@ body{
 .guarantee-item{
   text-align:center;
 }
-.guarantee-icon{font-size:20px;margin-bottom:6px}
+.guarantee-icon{
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:6px;
+}
+.guarantee-icon svg{
+  width:22px;height:22px;
+  color:rgba(212,191,163,0.85);
+}
 .guarantee-text{font-size:10px;color:rgba(255,255,255,0.35);line-height:1.6;letter-spacing:.05em}
 
 /* ── FOOTER ── */
 footer{
-  background:#111;
+  background:var(--espresso);
   padding:40px 28px;
   text-align:center;
 }
@@ -842,7 +863,7 @@ footer{
   position:relative;
   z-index:3;
 }
-.hero-cta-btn:hover{background:#555}
+.hero-cta-btn:hover{background:var(--espresso-soft)}
 
 /* 変更6: 縛りなしバッジ */
 .no-lock-badge{
@@ -853,6 +874,15 @@ footer{
   margin-bottom:6px;
   letter-spacing:.04em;
   line-height:1.5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+}
+.no-lock-badge .inline-icon{
+  width:13px;height:13px;
+  flex-shrink:0;
+  color:var(--accent);
 }
 
 /* Scene 4 口コミカード（LP用動画・60秒版） */
@@ -907,14 +937,14 @@ footer{
   max-height:calc(100svh - 72px);
   overflow:hidden;
   cursor:pointer;
-  background:#0d0b07;
+  background:var(--espresso);
 }
 .scene-label{
   position:absolute;
   top:0;left:0;right:0;
   z-index:10;
   padding:16px 20px 12px;
-  background:linear-gradient(to bottom,rgba(0,0,0,0.72) 0%,transparent 100%);
+  background:linear-gradient(to bottom,rgba(43,32,23,0.75) 0%,transparent 100%);
   font-family:'Cormorant Garamond',serif;
   font-size:18px;
   font-weight:300;
@@ -935,7 +965,7 @@ footer{
   height:100%;
   object-fit:contain;   /* 動画全体が収まるよう contain */
   display:block;
-  background:#0d0b07;
+  background:var(--espresso);
 }
 /* 再生ボタン：待機中のみ表示、再生中は完全に消す */
 .play-hint{
