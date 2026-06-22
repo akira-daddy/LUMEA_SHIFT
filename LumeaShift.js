@@ -29,7 +29,7 @@ const stickyObserver = new IntersectionObserver((entries)=>{
     if(e.target===finalSection && e.isIntersecting){
       stickyCta.classList.remove('visible');
     } else if(e.target===finalSection && !e.isIntersecting){
-      if(!heroSection.getBoundingClientRect().bottom > 0){
+      if(!heroSection.getBoundingClientRect().bottom < 0){
         stickyCta.classList.add('visible');
       }
     }
