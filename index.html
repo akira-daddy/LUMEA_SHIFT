@@ -62,31 +62,14 @@
 <link rel="stylesheet" href="LumeaShift.css">
 </head>
 <body>
-<!-- HEADER -->
-<header class="site-header" id="siteHeader">
-  <div class="logo">Lumea Shift</div>
-  <a href="#pricing" class="header-cta">まず試す ─ ¥1,980</a>
-</header>
-
-
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-content">
-    <p class="hero-eyebrow">All in one serum &nbsp;·&nbsp; For day & night</p>
-    <h1 class="hero-headline">
-      帰宅が遅い日は、<br>
-      <em>全部やるの無理。</em>
-    </h1>
-    <p class="hero-sub">完璧じゃなくていい。<br>1本で、整えるだけでいい。</p>
-    <a href="#pricing" class="hero-cta-btn">まず1本試してみる ─ 初回限定¥1,980</a>
-  </div>
-
-  <!-- プロモーション動画 -->
+  <!-- 動画：全面背景 -->
   <div class="hero-video-wrap" id="heroVideoWrap">
     <video
       class="hero-promo-video"
       id="heroPromoVideo"
-      src="images_dir/LUMEA_SHIFT_LP_movie_size43_hero_no_audio_text.mp4"
+      src="images_dir/LUMEA_SHIFT_LP_movie_hero_size916_no_audio_text.mp4"
       muted
       loop
       playsinline
@@ -100,6 +83,17 @@
         <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
       </div>
     </div>
+  </div>
+
+  <!-- テキスト＋CTAを動画の上に重ねて配置 -->
+  <div class="hero-content">
+    <p class="hero-eyebrow">All in one serum &nbsp;·&nbsp; For day & night</p>
+    <h1 class="hero-headline">
+      帰宅が遅い日は、<br>
+      <em>全部やるの無理。</em>
+    </h1>
+    <p class="hero-sub">完璧じゃなくていい。<br>1本で、整えるだけでいい。</p>
+    <button type="button" class="hero-cta-btn open-order-modal" data-plan="subscription">まず1本試してみる ─ 初回限定¥1,980</button>
   </div>
 
   <div class="hero-scroll">
@@ -249,7 +243,7 @@
 
   <div class="video-cta-section">
     <p class="video-cta-text">"完璧じゃなくていい。整えるだけでいい。"</p>
-    <a href="#pricing" class="btn-video-cta">まず1本試してみる</a>
+    <button type="button" class="btn-video-cta open-order-modal" data-plan="subscription">まず1本試してみる</button>
   </div>
 </section>
 
@@ -339,7 +333,8 @@
         <div class="pricing-feature"><span class="pricing-check"><svg class="check-svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span> 朝夜兼用オールインワン</div>
         <div class="pricing-feature"><span class="pricing-check"><svg class="check-svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span> MADE IN JAPAN</div>
       </div>
-      <a href="#" class="btn-primary btn-primary-dark">通常購入する</a>
+<!-- ① 通常購入ボタン -->
+      <button type="button" class="btn-primary btn-primary-dark open-order-modal" data-plan="normal">通常購入する</button>
     </div>
     <!-- 定期購入 -->
     <div class="pricing-card featured">
@@ -353,7 +348,7 @@
         <div class="pricing-feature"><span class="pricing-check"><svg class="check-svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span> いつでも解約OK（5日前まで）</div>
       </div>
       <p class="no-lock-badge"><svg class="inline-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7.2" width="10" height="6.8" rx="1.4"/><path d="M5.2 7.2V5a2.8 2.8 0 0 1 5.4-1"/></svg> 回数縛りなし ・ いつでも解約OK（5日前まで）</p>
-      <a href="#" class="btn-primary btn-primary-light">1本だけ試してみる（初回¥1,980）</a>
+      <button type="button" class="btn-primary btn-primary-light open-order-modal" data-plan="subscription">1本だけ試してみる（初回¥1,980）</button>
     </div>
   </div>
   <p class="pricing-sub-note">
@@ -467,29 +462,33 @@
 
 <!-- FINAL CTA -->
 <section class="section-final">
-  <p class="final-tag">Lumea Shift</p>
-  <h2 class="final-headline">
-    完璧じゃなくていい。<br>整えるだけでいい。
-  </h2>
-  <p class="final-sub">
-    忙しい毎日に、1本だけ持っておく。<br>
-    それだけで、明日の朝が少し変わる。
-  </p>
-  <img class="final-product-img" src="images_dir/Lotion_Bottle_Box.png" alt="LUMEA SHIFT">
-  <a href="#pricing" class="btn-final">まず1本試してみる</a>
-  <a href="#" class="btn-final-sub">LINEで相談する →</a>
-  <div class="guarantee-row">
-    <div class="guarantee-item">
-      <div class="guarantee-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.2 12 4l8.5 4.2v8.1L12 20.5l-8.5-4.2z"/><path d="M3.5 8.2 12 12.3l8.5-4.1M12 12.3v8.2"/></svg></div>
-      <div class="guarantee-text">初回送料<br>無料</div>
-    </div>
-    <div class="guarantee-item">
-      <div class="guarantee-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9.2" rx="1.8"/><path d="M7.5 11V7.5a4.5 4.5 0 0 1 8.5-2"/></svg></div>
-      <div class="guarantee-text">縛りなし<br>いつでも解約</div>
-    </div>
-    <div class="guarantee-item">
-      <div class="guarantee-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/></svg></div>
-      <div class="guarantee-text">MADE IN<br>JAPAN</div>
+  <div class="final-bg-img" aria-hidden="true">
+    <img src="images_dir/Lotion_Bottle_Box.png" alt="">
+  </div>
+  <div class="final-content">
+    <p class="final-tag">Lumea Shift</p>
+    <h2 class="final-headline">
+      完璧じゃなくていい。<br>整えるだけでいい。
+    </h2>
+    <p class="final-sub">
+      忙しい毎日に、1本だけ持っておく。<br>
+      それだけで、明日の朝が少し変わる。
+    </p>
+    <button type="button" class="btn-final open-order-modal" data-plan="subscription">まず1本試してみる</button>
+    <a href="#" class="btn-final-sub">LINEで相談する →</a>
+    <div class="guarantee-row">
+      <div class="guarantee-item">
+        <div class="guarantee-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.2 12 4l8.5 4.2v8.1L12 20.5l-8.5-4.2z"/><path d="M3.5 8.2 12 12.3l8.5-4.1M12 12.3v8.2"/></svg></div>
+        <div class="guarantee-text">初回送料<br>無料</div>
+      </div>
+      <div class="guarantee-item">
+        <div class="guarantee-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9.2" rx="1.8"/><path d="M7.5 11V7.5a4.5 4.5 0 0 1 8.5-2"/></svg></div>
+        <div class="guarantee-text">縛りなし<br>いつでも解約</div>
+      </div>
+      <div class="guarantee-item">
+        <div class="guarantee-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/></svg></div>
+        <div class="guarantee-text">MADE IN<br>JAPAN</div>
+      </div>
     </div>
   </div>
 </section>
@@ -523,9 +522,168 @@
       <div class="sticky-price-main">初回 ¥1,980</div>
       <div class="sticky-price-sub">縛りなし ·  いつでも解約OK</div>
     </div>
-    <a href="#pricing" class="sticky-btn">1本試す ¥1,980</a>
+    <button type="button" class="sticky-btn open-order-modal" data-plan="subscription">1本試す ¥1,980</button>
   </div>
 </div>
+
+
+<!-- ══════════════════════════════════════════════
+     注文フォーム モーダル
+     GAS Web App URL を LUMEA_GAS_URL に設定してください
+═══════════════════════════════════════════════ -->
+<div id="orderModal" class="om-overlay" role="dialog" aria-modal="true" aria-labelledby="omTitle" hidden>
+  <div class="om-sheet">
+
+    <!-- ヘッダー -->
+    <div class="om-header">
+      <div class="om-header-brand">LUMEA SHIFT</div>
+      <button class="om-close" id="omClose" aria-label="閉じる">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6l-12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- プランバナー -->
+    <div class="om-plan-banner" id="omPlanBanner">
+      <span class="om-plan-label" id="omPlanLabel">定期購入 おすすめ</span>
+      <span class="om-plan-price" id="omPlanPrice">初回 ¥1,980 <small>（2回目以降 ¥3,480）</small></span>
+    </div>
+
+    <!-- ステッパー -->
+    <div class="om-steps">
+      <div class="om-step active" data-step="1"><span class="om-step-num">1</span><span class="om-step-lbl">お客様情報</span></div>
+      <div class="om-step-line"></div>
+      <div class="om-step" data-step="2"><span class="om-step-num">2</span><span class="om-step-lbl">お届け先</span></div>
+      <div class="om-step-line"></div>
+      <div class="om-step" data-step="3"><span class="om-step-num">3</span><span class="om-step-lbl">お支払い</span></div>
+    </div>
+
+    <!-- フォーム本体 -->
+    <div class="om-body">
+      <div class="om-error-box" id="omErrorBox" hidden></div>
+
+      <!-- ── Step 1: お客様情報 ── -->
+      <div class="om-page" id="omPage1">
+        <div class="om-field">
+          <label class="om-label" for="omName">お名前 <span class="om-req">必須</span></label>
+          <input class="om-input" id="omName" type="text" placeholder="山田 花子" autocomplete="name">
+          <div class="om-field-err" id="errName"></div>
+        </div>
+        <div class="om-field">
+          <label class="om-label" for="omKana">フリガナ <span class="om-req">必須</span></label>
+          <input class="om-input" id="omKana" type="text" placeholder="ヤマダ ハナコ" autocomplete="off">
+          <div class="om-field-err" id="errKana"></div>
+        </div>
+        <div class="om-field">
+          <label class="om-label" for="omEmail">メールアドレス <span class="om-req">必須</span></label>
+          <input class="om-input" id="omEmail" type="email" placeholder="example@email.com" autocomplete="email">
+          <div class="om-field-err" id="errEmail"></div>
+        </div>
+        <div class="om-field">
+          <label class="om-label" for="omEmailC">メールアドレス（確認） <span class="om-req">必須</span></label>
+          <input class="om-input" id="omEmailC" type="email" placeholder="もう一度入力してください" autocomplete="off">
+          <div class="om-field-err" id="errEmailC"></div>
+        </div>
+        <div class="om-field">
+          <label class="om-label" for="omTel">電話番号 <span class="om-req">必須</span></label>
+          <input class="om-input" id="omTel" type="tel" placeholder="090-1234-5678" autocomplete="tel">
+          <div class="om-field-err" id="errTel"></div>
+        </div>
+      </div>
+
+      <!-- ── Step 2: お届け先 ── -->
+      <div class="om-page" id="omPage2" hidden>
+        <div class="om-field">
+          <label class="om-label" for="omZip">郵便番号 <span class="om-req">必須</span></label>
+          <div class="om-zip-row">
+            <input class="om-input om-zip-input" id="omZip" type="text" placeholder="1234567" inputmode="numeric" maxlength="8" autocomplete="postal-code">
+          </div>
+          <div class="om-field-note">ハイフンあり・なし どちらでも可</div>
+          <div class="om-field-err" id="errZip"></div>
+        </div>
+        <div class="om-field">
+          <label class="om-label" for="omAddr">住所 <span class="om-req">必須</span></label>
+          <input class="om-input" id="omAddr" type="text" placeholder="東京都渋谷区神宮前3-10-5" autocomplete="street-address">
+          <div class="om-field-note">番地・マンション名・号室まで入力してください</div>
+          <div class="om-field-err" id="errAddr"></div>
+        </div>
+        <div class="om-field">
+          <label class="om-label" for="omNote">備考（任意）</label>
+          <textarea class="om-input om-textarea" id="omNote" placeholder="配達時間・アレルギー等、ご要望があればご記入ください" rows="3"></textarea>
+        </div>
+      </div>
+
+      <!-- ── Step 3: お支払い ── -->
+      <div class="om-page" id="omPage3" hidden>
+        <p class="om-pay-lead">お支払い方法を選択してください。<br><small>実際のお支払い情報は注文確認メール後にご案内します。</small></p>
+        <div class="om-pay-options">
+          <label class="om-pay-card">
+            <input type="radio" name="omPayment" value="credit">
+            <span class="om-pay-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            </span>
+            <span class="om-pay-info">
+              <span class="om-pay-name">クレジットカード</span>
+              <span class="om-pay-desc">VISA / Mastercard / JCB / AMEX</span>
+            </span>
+            <span class="om-pay-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.5 3.5 6.5-8"/></svg></span>
+          </label>
+          <label class="om-pay-card">
+            <input type="radio" name="omPayment" value="convenience">
+            <span class="om-pay-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-5 9 5v11H3z"/><path d="M9 21V12h6v9"/></svg>
+            </span>
+            <span class="om-pay-info">
+              <span class="om-pay-name">コンビニ払い</span>
+              <span class="om-pay-desc">セブン / ローソン / ファミマ 他</span>
+            </span>
+            <span class="om-pay-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.5 3.5 6.5-8"/></svg></span>
+          </label>
+          <label class="om-pay-card">
+            <input type="radio" name="omPayment" value="bank">
+            <span class="om-pay-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18M3 14h18M5 6l7-3 7 3M5 18v2h14v-2"/></svg>
+            </span>
+            <span class="om-pay-info">
+              <span class="om-pay-name">銀行振込</span>
+              <span class="om-pay-desc">振込先は注文確認メールでご案内</span>
+            </span>
+            <span class="om-pay-check"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.5 3.5 6.5-8"/></svg></span>
+          </label>
+        </div>
+        <div class="om-field-err" id="errPayment"></div>
+
+        <!-- 注文サマリー -->
+        <div class="om-summary">
+          <div class="om-summary-title">ご注文内容の確認</div>
+          <div class="om-summary-row"><span>商品</span><span>LUMEA SHIFT オールインワン美容液 50mL</span></div>
+          <div class="om-summary-row" id="omSummaryPlan"><span>プラン</span><span>─</span></div>
+          <div class="om-summary-row om-summary-total" id="omSummaryPrice"><span>お支払い（初回）</span><span>─</span></div>
+        </div>
+      </div>
+    </div><!-- /.om-body -->
+
+    <!-- フッターボタン -->
+    <div class="om-footer">
+      <button type="button" class="om-btn-back" id="omBack" hidden>← 戻る</button>
+      <button type="button" class="om-btn-next" id="omNext">次へ →</button>
+      <button type="button" class="om-btn-submit" id="omSubmit" hidden>
+        <span id="omSubmitLabel">注文を確定する</span>
+        <span id="omSubmitSpinner" class="om-spinner" hidden></span>
+      </button>
+    </div>
+
+    <!-- 完了画面 -->
+    <div class="om-done" id="omDone" hidden>
+      <div class="om-done-icon">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="20"/><path d="M15 24.5l6.5 6.5 12-15"/></svg>
+      </div>
+      <div class="om-done-title">ご注文ありがとうございます</div>
+      <p class="om-done-body">ご入力いただいたメールアドレスに<br>確認メールをお送りしました。<br><small>※ 届かない場合は迷惑メールフォルダをご確認ください。</small></p>
+      <button type="button" class="om-done-close" id="omDoneClose">閉じる</button>
+    </div>
+
+  </div><!-- /.om-sheet -->
+</div><!-- /#orderModal -->
 
 
 <script src="LumeaShift.js"></script>
