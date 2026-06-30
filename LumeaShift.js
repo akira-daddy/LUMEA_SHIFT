@@ -49,178 +49,300 @@ if(scroll){
   });
 }
 
-// Story scenes – 連続再生ロジック
+// Story scenes – SP=連続再生 / PC=横並び同時再生 を画面幅で切替
 (function(){
   const scenes = Array.from(document.querySelectorAll('.story-scene'));
   if(!scenes.length) return;
 
-  let currentIdx = -1;
-  let isRunning = false;
+  const mqPC = window.matchMedia('(min-width:768px)');
+  let mode = null;        // 'sp' | 'pc'
+  let teardown = null;    // 現モードの後始末関数
 
-  // 全シーンのvideoからloopを確実に除去
-  scenes.forEach(s=>{
-    const v = s.querySelector('video');
-    if(v) v.removeAttribute('loop');
-  });
-
-  // ブラウザの音声ロック解除：ページ初回インタラクション時に無音再生→即停止
-  let audioUnlocked = false;
-  function unlockAudio(){
-    if(audioUnlocked) return;
-    audioUnlocked = true;
+  // 全シーン停止（モード切替時の共通処理）
+  function stopAllScenes(){
     scenes.forEach(s=>{
       const v = s.querySelector('video');
-      if(!v) return;
-      v.muted = false;
-      v.play().then(()=>{ v.pause(); v.currentTime = 0; }).catch(()=>{});
-    });
-  }
-  // マウス移動・タッチ・クリックのいずれかで一度だけ解除
-  ['mousemove','touchstart','click'].forEach(ev=>{
-    document.addEventListener(ev, unlockAudio, {once:true, passive:true});
-  });
-
-  function stopAll(){
-    scenes.forEach(s=>{
-      const v = s.querySelector('video');
-      if(!v) return;
-      v.pause();
-      v.currentTime = 0;
+      if(v){ v.pause(); v.currentTime = 0; }
       s.classList.remove('playing');
     });
   }
 
-  // ── ユーザーによる「故意のスクロール」検知 ──
-  // playScene() 内で scrollIntoView を呼ぶ際は programmaticScroll を立てて、
-  // それによって発火する scroll イベントを「ユーザー操作」と誤認しないようにする。
-  let programmaticScroll = false;
-  let programmaticScrollTimer = null;
+  /* ══════════ PC：SCENE01→02→03→04 を順番に自動再生（1巡で停止） ══════════ */
+  function setupPC(){
+    let isRunning = false;
+    let currentIdx = -1;
+    let curVideo = null, curEnded = null;
 
-  function markProgrammaticScroll(){
-    programmaticScroll = true;
-    clearTimeout(programmaticScrollTimer);
-    // smooth scrollの完了を待つための猶予期間
-    programmaticScrollTimer = setTimeout(()=>{
-      programmaticScroll = false;
-    }, 900);
-  }
+    scenes.forEach(s=>{
+      const v = s.querySelector('video');
+      if(!v) return;
+      v.removeAttribute('loop');
+      v.loop = false;            // 1本ずつ順番に → ループしない
+      v.muted = true;            // 自動再生のため無音（scene動画は no_voice）
+      v.setAttribute('playsinline','');
+    });
 
-  function onUserScroll(){
-    if(programmaticScroll) return; // 自動スクロール中は無視
-    if(isRunning){
-      stopSequence();
+    function clearEnded(){
+      if(curVideo && curEnded) curVideo.removeEventListener('ended', curEnded);
+      curVideo = null; curEnded = null;
     }
-  }
-
-  // scroll / wheel / touchmove のいずれかでユーザーの能動的な画面移動を検知
-  window.addEventListener('scroll', onUserScroll, {passive:true});
-  window.addEventListener('wheel', onUserScroll, {passive:true});
-  window.addEventListener('touchmove', onUserScroll, {passive:true});
-
-  function playScene(idx){
-    if(idx >= scenes.length){
-      isRunning = false;
-      return;
-    }
-    currentIdx = idx;
-    const scene = scenes[idx];
-    const video = scene.querySelector('video');
-    if(!video) return;
-
-    scenes.forEach((s,i)=>{
-      if(i !== idx){
+    // 再生中以外を停止（先頭に戻す）
+    function stopAll(){
+      clearEnded();
+      scenes.forEach(s=>{
         const v = s.querySelector('video');
         if(v){ v.pause(); v.currentTime = 0; }
         s.classList.remove('playing');
-      }
-    });
-
-    // そのSceneの画面までスクロール（自動スクロールであることをマーク）
-    markProgrammaticScroll();
-    scene.scrollIntoView({behavior:'smooth', block:'start'});
-
-    video.currentTime = 0;
-    video.muted = false;
-    const p = video.play();
-    scene.classList.add('playing');
-
-    if(p && p.catch){
-      p.catch(()=>{
-        video.muted = true;
-        video.play().catch(()=>{});
-        scene.classList.add('playing');
       });
     }
 
-    video.addEventListener('ended', function(){
-      scene.classList.remove('playing');
-      if(isRunning) playScene(currentIdx + 1);
-    },{once:true});
-  }
-
-  function startSequence(){
-    isRunning = true;
-    playScene(0);
-  }
-
-  function stopSequence(){
-    isRunning = false;
-    stopAll();
-    currentIdx = -1;
-  }
-
-  // ビューポートに入ったら連続再生を自動開始（scene1が50%見えたとき）
-  const scene1 = scenes[0];
-  const seqObserver = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting && !isRunning) startSequence();
-    });
-  }, { threshold: 0.5 });
-  seqObserver.observe(scene1);
-
-  scene1.addEventListener('mouseenter', ()=>{
-    if(!isRunning) startSequence();
-  });
-
-  scene1.addEventListener('click', ()=>{
-    if(!isRunning){
-      startSequence();
-    } else {
-      const v = scene1.querySelector('video');
-      const isCurrent = currentIdx === 0;
-      if(isCurrent && v && !v.paused){
-        stopSequence();
-      } else {
-        stopSequence();
-        setTimeout(startSequence, 50);
+    function playScene(idx){
+      // 04 まで再生し終えたら一旦ストップ
+      if(idx >= scenes.length){
+        isRunning = false; currentIdx = -1; stopAll();
+        return;
       }
-    }
-  });
+      currentIdx = idx;
+      const scene = scenes[idx];
+      const video = scene.querySelector('video');
+      if(!video){ playScene(idx + 1); return; }
 
-  scenes.slice(1).forEach((scene)=>{
-    scene.addEventListener('click', ()=>{
+      // 再生対象以外はすべて停止＋先頭に戻す
+      clearEnded();
+      scenes.forEach((s,i)=>{
+        if(i !== idx){
+          const v = s.querySelector('video');
+          if(v){ v.pause(); v.currentTime = 0; }
+          s.classList.remove('playing');
+        }
+      });
+
+      video.currentTime = 0;
+      video.muted = true;
+      const p = video.play();
+      scene.classList.add('playing');
+      if(p && p.catch) p.catch(()=>{});
+
+      curVideo = video;
+      curEnded = function(){
+        scene.classList.remove('playing');
+        if(isRunning) playScene(currentIdx + 1);   // 次のシーンへ
+      };
+      video.addEventListener('ended', curEnded, {once:true});
+    }
+
+    function startSequence(from){ isRunning = true; playScene(from || 0); }
+    function stopSequence(){ isRunning = false; currentIdx = -1; stopAll(); }
+
+    // 横並びの先頭シーンが見えたら、SCENE01から自動で連続再生（1巡のみ）
+    const anchor = scenes[0];
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting && !isRunning) startSequence(0);
+      });
+    }, { threshold: 0.5 });
+    io.observe(anchor);
+
+    // クリックしたシーンから連続再生を再スタート
+    const handlers = [];
+    scenes.forEach((s, i)=>{
+      const h = ()=>{ stopSequence(); startSequence(i); };
+      s.addEventListener('click', h);
+      handlers.push([s, h]);
+    });
+
+    return function cleanup(){
+      io.disconnect();
+      handlers.forEach(([s,h])=>s.removeEventListener('click', h));
+      stopAll();
+      isRunning = false; currentIdx = -1;
+    };
+  }
+
+  /* ══════════ SP：SCENE01→04 を順番に連続再生（音声あり） ══════════ */
+  function setupSP(){
+    let currentIdx = -1;
+    let isRunning = false;
+
+    scenes.forEach(s=>{
+      const v = s.querySelector('video');
+      if(v) v.removeAttribute('loop');
+    });
+
+    // 初回インタラクションで音声ロック解除
+    let audioUnlocked = false;
+    function unlockAudio(){
+      if(audioUnlocked) return;
+      audioUnlocked = true;
+      scenes.forEach(s=>{
+        const v = s.querySelector('video');
+        if(!v) return;
+        v.muted = false;
+        v.play().then(()=>{ v.pause(); v.currentTime = 0; }).catch(()=>{});
+      });
+    }
+    const unlockEvents = ['mousemove','touchstart','click'];
+    unlockEvents.forEach(ev=>document.addEventListener(ev, unlockAudio, {once:true, passive:true}));
+
+    function stopAll(){ stopAllScenes(); }
+
+    // ユーザーの能動スクロール検知（自動スクロールと区別）
+    let programmaticScroll = false;
+    let programmaticScrollTimer = null;
+    function markProgrammaticScroll(){
+      programmaticScroll = true;
+      clearTimeout(programmaticScrollTimer);
+      programmaticScrollTimer = setTimeout(()=>{ programmaticScroll = false; }, 900);
+    }
+    function onUserScroll(){
+      if(programmaticScroll) return;
+      if(isRunning) stopSequence();
+    }
+    window.addEventListener('scroll', onUserScroll, {passive:true});
+    window.addEventListener('wheel', onUserScroll, {passive:true});
+    window.addEventListener('touchmove', onUserScroll, {passive:true});
+
+    const endedHandlers = new Map();
+
+    function playScene(idx){
+      if(idx >= scenes.length){ isRunning = false; return; }
+      currentIdx = idx;
+      const scene = scenes[idx];
       const video = scene.querySelector('video');
       if(!video) return;
-      if(video.paused){
-        video.muted = false;
-        video.play().catch(()=>{ video.muted = true; video.play(); });
-        scene.classList.add('playing');
-      } else {
-        video.pause();
-        scene.classList.remove('playing');
+
+      scenes.forEach((s,i)=>{
+        if(i !== idx){
+          const v = s.querySelector('video');
+          if(v){ v.pause(); v.currentTime = 0; }
+          s.classList.remove('playing');
+        }
+      });
+
+      markProgrammaticScroll();
+      scene.scrollIntoView({behavior:'smooth', block:'start'});
+
+      video.currentTime = 0;
+      video.muted = false;
+      const p = video.play();
+      scene.classList.add('playing');
+      if(p && p.catch){
+        p.catch(()=>{
+          video.muted = true;
+          video.play().catch(()=>{});
+          scene.classList.add('playing');
+        });
       }
+
+      const onEnded = function(){
+        scene.classList.remove('playing');
+        if(isRunning) playScene(currentIdx + 1);
+      };
+      endedHandlers.set(video, onEnded);
+      video.addEventListener('ended', onEnded, {once:true});
+    }
+
+    function startSequence(){ isRunning = true; playScene(0); }
+    function stopSequence(){ isRunning = false; stopAll(); currentIdx = -1; }
+
+    const scene1 = scenes[0];
+    const seqObserver = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting && !isRunning) startSequence(); });
+    }, { threshold: 0.5 });
+    seqObserver.observe(scene1);
+
+    const onScene1Enter = ()=>{ if(!isRunning) startSequence(); };
+    scene1.addEventListener('mouseenter', onScene1Enter);
+
+    const onScene1Click = ()=>{
+      if(!isRunning){ startSequence(); }
+      else {
+        const v = scene1.querySelector('video');
+        const isCurrent = currentIdx === 0;
+        if(isCurrent && v && !v.paused){ stopSequence(); }
+        else { stopSequence(); setTimeout(startSequence, 50); }
+      }
+    };
+    scene1.addEventListener('click', onScene1Click);
+
+    const restClicks = [];
+    scenes.slice(1).forEach((scene)=>{
+      const h = ()=>{
+        const video = scene.querySelector('video');
+        if(!video) return;
+        if(video.paused){
+          video.muted = false;
+          video.play().catch(()=>{ video.muted = true; video.play(); });
+          scene.classList.add('playing');
+        } else {
+          video.pause();
+          scene.classList.remove('playing');
+        }
+      };
+      scene.addEventListener('click', h);
+      restClicks.push([scene, h]);
     });
-  });
+
+    return function cleanup(){
+      isRunning = false;
+      seqObserver.disconnect();
+      window.removeEventListener('scroll', onUserScroll);
+      window.removeEventListener('wheel', onUserScroll);
+      window.removeEventListener('touchmove', onUserScroll);
+      unlockEvents.forEach(ev=>document.removeEventListener(ev, unlockAudio));
+      scene1.removeEventListener('mouseenter', onScene1Enter);
+      scene1.removeEventListener('click', onScene1Click);
+      restClicks.forEach(([s,h])=>s.removeEventListener('click', h));
+      endedHandlers.forEach((h,v)=>v.removeEventListener('ended', h));
+    };
+  }
+
+  // モード適用（初期 & ブレークポイント跨ぎ）
+  function applyMode(){
+    const want = mqPC.matches ? 'pc' : 'sp';
+    if(want === mode) return;
+    if(teardown){ teardown(); teardown = null; }
+    stopAllScenes();
+    mode = want;
+    teardown = (want === 'pc') ? setupPC() : setupSP();
+  }
+  if(mqPC.addEventListener) mqPC.addEventListener('change', applyMode);
+  else if(mqPC.addListener) mqPC.addListener(applyMode);
+  applyMode();
 })();
 
-// ── Hero promo video: autoplay on viewport enter, hover/tap to toggle ──
+
+// ── Hero promo video: SP=縦動画 / PC=横動画 を画面幅で出し分け ──
+//    autoplay on viewport enter, hover/tap to toggle
 (function(){
   const wrap  = document.getElementById('heroVideoWrap');
   const video = document.getElementById('heroPromoVideo');
   if(!wrap || !video) return;
 
+  // SP（縦9:16）と PC（横16:9）の動画ソース
+  const SRC_SP = 'images_dir/LUMEA_SHIFT_LP_movie_hero_size916_no_audio_text.mp4';
+  const SRC_PC = 'images_dir/LUMEA_SHIFT_LP_movie_size43_hero_no_audio_text.mp4';
+  const mqPC   = window.matchMedia('(min-width:768px)');
+
   video.loop  = true;
   video.muted = true;
+
+  // 画面幅に応じて適切なソースへ差し替え（無駄な二重ロードを避ける）
+  function applyHeroSource(){
+    const want = mqPC.matches ? SRC_PC : SRC_SP;
+    if(!video.currentSrc || !video.currentSrc.endsWith(want)){
+      const wasPlaying = !video.paused;
+      video.src = want;
+      video.load();
+      if(wasPlaying || isHeroInView()) playHero();
+    }
+  }
+  function isHeroInView(){
+    const r = wrap.getBoundingClientRect();
+    return r.bottom > 0 && r.top < (window.innerHeight || 0);
+  }
+  if(mqPC.addEventListener) mqPC.addEventListener('change', applyHeroSource);
+  else if(mqPC.addListener) mqPC.addListener(applyHeroSource); // 旧Safari
 
   function playHero(){
     const p = video.play();
@@ -232,13 +354,16 @@ if(scroll){
     wrap.classList.remove('playing');
   }
 
-  // ビューポートに入ったら自動再生
+  // ビューポートに入ったら、正しいソースを適用したうえで自動再生
   const observer = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{
-      if(e.isIntersecting){ playHero(); }
+      if(e.isIntersecting){ applyHeroSource(); playHero(); }
     });
   }, { threshold: 0.3 });
   observer.observe(wrap);
+
+  // 初期ロード時点で画面幅に合うソースを適用
+  applyHeroSource();
 
   // Desktop: mouseenter でも再生
   wrap.addEventListener('mouseenter', ()=>{
